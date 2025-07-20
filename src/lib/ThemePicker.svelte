@@ -5,6 +5,11 @@
 	let brandChroma = $state(5);
 	let textOpacity = $state(0.6);
 
+	// Initialize theme on component mount
+	$effect(() => {
+		updateTheme();
+	});
+
 	function getLightnessFromHex(hex: string): number {
 		const hexCode = hex.replace('#', '');
 		const r = parseInt(hexCode.substr(0, 2), 16);
@@ -15,11 +20,49 @@
 		return (brightness / 255) * 100;
 	}
 
+	function hexToOklch(hex: string): string {
+		// Convert HEX to RGB first
+		const hexCode = hex.replace('#', '');
+		const r = parseInt(hexCode.substr(0, 2), 16) / 255;
+		const g = parseInt(hexCode.substr(2, 2), 16) / 255;
+		const b = parseInt(hexCode.substr(4, 2), 16) / 255;
+		
+		// Convert RGB to linear RGB
+		const toLinear = (c: number) => c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+		const rLinear = toLinear(r);
+		const gLinear = toLinear(g);
+		const bLinear = toLinear(b);
+		
+		// Convert linear RGB to XYZ (using D65 illuminant)
+		const x = 0.4124564 * rLinear + 0.3575761 * gLinear + 0.1804375 * bLinear;
+		const y = 0.2126729 * rLinear + 0.7151522 * gLinear + 0.0721750 * bLinear;
+		const z = 0.0193339 * rLinear + 0.1191920 * gLinear + 0.9503041 * bLinear;
+		
+		// Convert XYZ to OKLab
+		const l_ = Math.cbrt(0.8189330101 * x + 0.3618667424 * y - 0.1288597137 * z);
+		const m_ = Math.cbrt(0.0329845436 * x + 0.9293118715 * y + 0.0361456387 * z);
+		const s_ = Math.cbrt(0.0482003018 * x + 0.2643662691 * y + 0.6338517070 * z);
+		
+		const l = 0.2104542553 * l_ + 0.7936177850 * m_ - 0.0040720468 * s_;
+		const a = 1.9779984951 * l_ - 2.4285922050 * m_ + 0.4505937099 * s_;
+		const b_oklab = 0.0259040371 * l_ + 0.7827717662 * m_ - 0.8086757660 * s_;
+		
+		// Convert OKLab to OKLCH
+		const lightness = l;
+		const chroma = Math.sqrt(a * a + b_oklab * b_oklab);
+		let hue = Math.atan2(b_oklab, a) * 180 / Math.PI;
+		if (hue < 0) hue += 360;
+		
+		// Return OKLCH values with proper precision
+		return `oklch(${(lightness * 100).toFixed(2)}% ${chroma.toFixed(4)} ${hue.toFixed(2)})`;
+	}
+
 	function updateTheme() {
 		const lightness = getLightnessFromHex(baseColor);
 		const textColor = lightness > 60 ? '#000000' : '#ffffff';
+		const baseColorOklch = hexToOklch(baseColor);
 		
-		document.body.style.setProperty('--base-color', baseColor);
+		document.body.style.setProperty('--base-color', baseColorOklch);
 		document.body.style.setProperty('--surface-color', `oklch(from var(--base-color) calc(l * ${surfaceLightness}) c h)`);
 		document.body.style.setProperty('--surface-light', `oklch(from var(--surface-color) calc(l * 1.2) c h)`);
 		document.body.style.setProperty('--brand-color', `oklch(from var(--base-color) calc(l * ${brandLightness}) calc(c * ${brandChroma}) h)`);
@@ -61,12 +104,13 @@
 	function generateCSSContent(): string {
 		const lightness = getLightnessFromHex(baseColor);
 		const textColor = lightness > 60 ? '#000000' : '#ffffff';
+		const baseColorOklch = hexToOklch(baseColor);
 		const themeId = generateThemeId();
 		const currentDate = new Date().toLocaleString();
 		
 		return `/* 
  * Generated Theme: ${themeId}
- * Base Color: ${baseColor}
+ * Base Color: ${baseColor} (converted to OKLCH: ${baseColorOklch})
  * Surface Lightness: ${surfaceLightness}
  * Brand Lightness: ${brandLightness}, Chroma: ${brandChroma}
  * Text Opacity: ${textOpacity}
@@ -76,7 +120,7 @@
 
 .${themeId} {
 	/* Base theme color chosen by user */
-	--base-color: ${baseColor};
+	--base-color: ${baseColorOklch};
 	
 	/* Surface color - ${surfaceLightness}x lightness of base */
 	--surface-color: oklch(from var(--base-color) calc(l * ${surfaceLightness}) c h);
@@ -396,7 +440,7 @@
 		
 		<div class="theme-info">
 			<span class="color-preview" style="background-color: {baseColor}"></span>
-			<span class="color-value text-[oklch(from_var(--text-color)_l_c_h_/_0.6)]">
+			<span class="color-value text-[color:var(--text-secondary)]">
 				{baseColor.toUpperCase()}
 			</span>
 		</div>
@@ -405,7 +449,7 @@
 
 <style>
 	:global(body) {
-		--base-color: #3b82f6;
+		--base-color: oklch(67.07% 0.1540 252.42);
 		--surface-color: oklch(from var(--base-color) calc(l * 1.2) c h);
 		--surface-light: oklch(from var(--surface-color) calc(l * 1.2) c h);
 		--brand-color: oklch(from var(--base-color) calc(l * 3) calc(c * 5) h);

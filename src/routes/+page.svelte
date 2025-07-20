@@ -30,7 +30,7 @@
 			<h1 class="text-4xl font-bold text-[oklch(from_var(--text-color)_l_c_h)]">
 				Dynamic Theme Picker
 			</h1>
-			<p class="text-lg text-[oklch(from_var(--text-color)_l_c_h_/_0.6)]">
+			<p class="text-lg text-[color:var(--text-secondary)]">
 				Choose any background color and watch the entire interface adapt
 				automatically
 			</p>
@@ -43,7 +43,7 @@
 				>
 					Surface Container
 				</h3>
-				<p class="text-[oklch(from_var(--text-color)_l_c_h_/_0.6)] mb-4">
+				<p class="text-[color:var(--text-secondary)] mb-4">
 					This container uses the surface color, which is automatically 20%
 					brighter than the base color.
 				</p>
@@ -56,7 +56,7 @@
 				>
 					Another Card
 				</h3>
-				<p class="text-[oklch(from_var(--text-color)_l_c_h_/_0.6)] mb-4">
+				<p class="text-[color:var(--text-secondary)] mb-4">
 					Notice how the text color automatically switches between black and
 					white for optimal readability.
 				</p>
@@ -69,7 +69,7 @@
 				>
 					Relative Colors
 				</h3>
-				<p class="text-[oklch(from_var(--text-color)_l_c_h_/_0.6)] mb-4">
+				<p class="text-[color:var(--text-secondary)] mb-4">
 					All colors are calculated relative to your chosen base color using
 					OKLCH color space.
 				</p>
@@ -94,14 +94,14 @@
 					<div class="blog-content">
 						<div class="blog-meta">
 							<span class="blog-category">Technology</span>
-							<time class="blog-date text-[oklch(from_var(--text-color)_l_c_h_/_0.6)]">
+							<time class="blog-date text-[color:var(--text-secondary)]">
 								Jan 15, 2025
 							</time>
 						</div>
 						<h3 class="blog-title text-[oklch(from_var(--text-color)_l_c_h)]">
 							The Future of Dynamic Color Systems
 						</h3>
-						<p class="blog-excerpt text-[oklch(from_var(--text-color)_l_c_h_/_0.7)]">
+						<p class="blog-excerpt text-[color:var(--text-secondary)]">
 							Explore how modern web applications are leveraging OKLCH color space 
 							and relative color functions to create adaptive, accessible interfaces 
 							that respond to user preferences in real-time.
@@ -111,7 +111,7 @@
 								<div class="author-avatar">
 									<span class="text-[oklch(from_var(--text-color)_l_c_h)]">JD</span>
 								</div>
-								<span class="author-name text-[oklch(from_var(--text-color)_l_c_h_/_0.8)]">
+								<span class="author-name text-[color:var(--text-secondary)]">
 									Jane Doe
 								</span>
 							</div>
@@ -133,14 +133,14 @@
 					<div class="blog-content">
 						<div class="blog-meta">
 							<span class="blog-category">Design</span>
-							<time class="blog-date text-[oklch(from_var(--text-color)_l_c_h_/_0.6)]">
+							<time class="blog-date text-[color:var(--text-secondary)]">
 								Jan 12, 2025
 							</time>
 						</div>
 						<h3 class="blog-title text-[oklch(from_var(--text-color)_l_c_h)]">
 							Building Accessible Theme Systems
 						</h3>
-						<p class="blog-excerpt text-[oklch(from_var(--text-color)_l_c_h_/_0.7)]">
+						<p class="blog-excerpt text-[color:var(--text-secondary)]">
 							Learn the principles behind creating theme systems that automatically 
 							adjust contrast ratios and maintain accessibility standards across 
 							different color combinations.
@@ -150,7 +150,7 @@
 								<div class="author-avatar">
 									<span class="text-[oklch(from_var(--text-color)_l_c_h)]">AS</span>
 								</div>
-								<span class="author-name text-[oklch(from_var(--text-color)_l_c_h_/_0.8)]">
+								<span class="author-name text-[color:var(--text-secondary)]">
 									Alex Smith
 								</span>
 							</div>
